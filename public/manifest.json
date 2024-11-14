@@ -1,6 +1,7 @@
 {
-  "short_name": "缩啦",
-  "name": "缩啦短链接｜简单易用的短链接生成工具，链接永久有效！",
+  "short_name": "ShortURL",
+  "name": "ShortURL - Simple and Easy-to-Use URL Shortening Tool, Permanent Links!",
+  "description": "ShortURL provides a simple and efficient URL shortening service, offering permanent links for easy sharing.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -9,12 +10,14 @@
     },
     {
       "src": "logo100.png",
-      "type": "image/png",
-      "sizes": "100x100"
+      "sizes": "100x100",
+      "type": "image/png"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#4CAF50",  // 绿色调，符合简洁风格
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "scope": "/"
 }
