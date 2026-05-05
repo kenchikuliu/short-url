@@ -6,7 +6,7 @@ const Error = () => {
         return null;
     }
     return (
-        <div className="py-4 font-mono text-lg text-red-600">
+        <div className="py-4 text-sm font-medium text-rose-600">
             {error}
         </div>
     );

@@ -1,7 +1,7 @@
 const Button = ({ label, onClick }) => {
     return (
         <button
-            className="px-4 py-3 rounded-lg bg-black border-r-4 border-b-4 border-yellow-500 font-mono font-bold text-lg text-yellow-100"
+            className="rounded-[1.4rem] bg-amber-500 px-7 py-5 text-base font-semibold text-slate-950 transition hover:bg-amber-400"
             onClick={onClick}
         >
             {label}
