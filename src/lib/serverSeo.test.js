@@ -1,4 +1,4 @@
-const { getHomeSeoContent, getRequestSeoState, getSeoContent, injectSeoIntoHtml, parseSeoRoute } = require("../../server/seo");
+const { INDEXABLE_LANGUAGE_CODES, buildCanonicalUrl, getHomeSeoContent, getRequestSeoState, getSeoContent, injectSeoIntoHtml, parseSeoRoute } = require("../../server/seo");
 
 describe("server seo helpers", () => {
   test("parses language-prefixed seo routes", () => {
@@ -28,6 +28,33 @@ describe("server seo helpers", () => {
     expect(output).toContain("rel=\"canonical\"");
     expect(output).toContain("lang=\"zh-CN\"");
     expect(output).toContain('hreflang="x-default"');
+    expect(output).toContain('content="index, follow"');
+  });
+
+  test("non-core locales are noindex and canonicalize to english", () => {
+    const html = `<!DOCTYPE html><html lang="en"><head><meta name="description" content="x" /><meta property="og:title" content="x" /><meta property="og:description" content="x" /><meta property="og:type" content="website" /><meta property="og:url" content="https://shorturl.wiki/" /><meta name="twitter:title" content="x" /><meta name="twitter:description" content="x" /><title>X</title></head><body><div id="root"><h1>Fallback</h1></div></body></html>`;
+    const output = injectSeoIntoHtml(html, {
+      baseUrl: "https://shorturl.wiki",
+      url: "https://shorturl.wiki/ko/url-shortener",
+      language: "ko",
+      content: getSeoContent("ko", "url-shortener"),
+      isSeoPage: true,
+      slug: "url-shortener",
+      requestPath: "/ko/url-shortener",
+    });
+
+    expect(output).toContain('content="noindex, follow"');
+    expect(output).toContain('rel="canonical" href="https://shorturl.wiki/en/url-shortener"');
+    expect(output).not.toContain('hreflang="ko"');
+    expect(output).not.toContain('hreflang="fr"');
+  });
+
+  test("root path canonicalizes to the root homepage", () => {
+    expect(buildCanonicalUrl("https://shorturl.wiki", "en", null, false, "/")).toBe("https://shorturl.wiki/");
+  });
+
+  test("indexable hreflang cluster is limited to core languages", () => {
+    expect(INDEXABLE_LANGUAGE_CODES).toEqual(["en", "zh-CN", "ja"]);
   });
 
   test("renders homepage overview highlights and localized scenario labels", () => {

@@ -13,6 +13,10 @@ const LANGUAGE_DETAILS = [
 ];
 const SUPPORTED_LANGUAGES = LANGUAGE_DETAILS.map((item) => item.code);
 const LANGUAGE_PATH_SEGMENTS = LANGUAGE_DETAILS.map((item) => item.path);
+const INDEXABLE_LANGUAGE_CODES = ["en", "zh-CN", "ja"];
+const INDEXABLE_LANGUAGE_DETAILS = LANGUAGE_DETAILS.filter((item) => INDEXABLE_LANGUAGE_CODES.includes(item.code));
+const clarityProjectId = String(process.env.CLARITY_PROJECT_ID || "").trim();
+const yandexMetricaId = String(process.env.YANDEX_METRICA_ID || "").trim();
 const SEO_PAGE_SLUGS = [
   "url-shortener",
   "qr-code-generator",
@@ -2542,6 +2546,8 @@ const resolveLanguage = (language) => {
 const getLanguagePathSegment = (language) =>
   LANGUAGE_DETAILS.find((item) => item.code === resolveLanguage(language))?.path || DEFAULT_LANGUAGE;
 
+const isIndexableLanguage = (language) => INDEXABLE_LANGUAGE_CODES.includes(resolveLanguage(language));
+
 const parseSeoRoute = (pathname) => {
   const segments = String(pathname || "/").split("/").filter(Boolean);
   if (segments.length >= 2 && LANGUAGE_PATH_SEGMENTS.includes(segments[0]) && SEO_PAGE_SLUGS.includes(segments[1])) {
@@ -2617,12 +2623,75 @@ const buildLocalizedUrl = (baseUrl, language, slug, isSeoPage) => {
   return `${baseUrl}/${segment}/`;
 };
 
+const buildCanonicalUrl = (baseUrl, language, slug, isSeoPage, requestPath = "") => {
+  const normalizedBaseUrl = String(baseUrl || "").replace(/\/+$/, "");
+  const resolved = resolveLanguage(language);
+
+  if (requestPath === "/") {
+    return `${normalizedBaseUrl}/`;
+  }
+
+  if (!isIndexableLanguage(resolved)) {
+    return buildLocalizedUrl(normalizedBaseUrl, DEFAULT_LANGUAGE, slug, isSeoPage);
+  }
+
+  return buildLocalizedUrl(normalizedBaseUrl, resolved, slug, isSeoPage);
+};
+
 const buildAlternateLinks = (baseUrl, slug, isSeoPage) => {
-  const links = SUPPORTED_LANGUAGES.map((language) => (
-    `<link rel="alternate" hreflang="${language}" href="${escapeHtml(buildLocalizedUrl(baseUrl, language, slug, isSeoPage))}" />`
+  const normalizedBaseUrl = String(baseUrl || "").replace(/\/+$/, "");
+  const links = INDEXABLE_LANGUAGE_DETAILS.map(({ code }) => (
+    !isSeoPage && code === DEFAULT_LANGUAGE
+      ? `<link rel="alternate" hreflang="${code}" href="${escapeHtml(`${normalizedBaseUrl}/`)}" />`
+      : `<link rel="alternate" hreflang="${code}" href="${escapeHtml(buildLocalizedUrl(normalizedBaseUrl, code, slug, isSeoPage))}" />`
   )).join("\n    ");
 
-  return `${links}\n    <link rel="alternate" hreflang="x-default" href="${escapeHtml(buildLocalizedUrl(baseUrl, DEFAULT_LANGUAGE, slug, isSeoPage))}" />`;
+  const xDefaultUrl = isSeoPage
+    ? buildLocalizedUrl(normalizedBaseUrl, DEFAULT_LANGUAGE, slug, isSeoPage)
+    : `${normalizedBaseUrl}/`;
+
+  return `${links}\n    <link rel="alternate" hreflang="x-default" href="${escapeHtml(xDefaultUrl)}" />`;
+};
+
+const buildRobotsMeta = (language) => (
+  isIndexableLanguage(language)
+    ? `<meta name="robots" content="index, follow" />`
+    : `<meta name="robots" content="noindex, follow" />`
+);
+
+const buildAnalyticsScripts = () => {
+  const scripts = [];
+
+  if (clarityProjectId) {
+    scripts.push(`<script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "${escapeHtml(clarityProjectId)}");
+    </script>`);
+  }
+
+  if (yandexMetricaId) {
+    scripts.push(`<script type="text/javascript">
+      (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {
+          if (document.scripts[j].src === r) { return; }
+        }
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a);
+      })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+      ym(${escapeHtml(yandexMetricaId)}, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+      });
+    </script><noscript><div><img src="https://mc.yandex.ru/watch/${escapeHtml(yandexMetricaId)}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>`);
+  }
+
+  return scripts.join("\n    ");
 };
 
 const buildStructuredData = (url, language, content, includeFaq) => {
@@ -3210,12 +3279,15 @@ const serverFallbackStyles = `
         }
     `;
 
-const injectSeoIntoHtml = (html, { baseUrl, url, language, content, isSeoPage, slug }) => {
+const injectSeoIntoHtml = (html, { baseUrl, url, language, content, isSeoPage, slug, requestPath = "" }) => {
   const title = escapeHtml(content.seoTitle || content.title);
   const description = escapeHtml(content.seoDescription || content.description);
   const rootHtml = buildRootHtml(content, language, slug, isSeoPage);
   const structuredData = buildStructuredData(url, language, content, isSeoPage);
   const alternateLinks = buildAlternateLinks(baseUrl, slug, isSeoPage);
+  const canonicalUrl = buildCanonicalUrl(baseUrl, language, slug, isSeoPage, requestPath);
+  const robotsMeta = buildRobotsMeta(language);
+  const analyticsScripts = buildAnalyticsScripts();
 
   return html
     .replace(/<html lang="[^"]*">/, `<html lang="${language}">`)
@@ -3230,10 +3302,12 @@ const injectSeoIntoHtml = (html, { baseUrl, url, language, content, isSeoPage, s
     .replace(/<meta name="twitter:description" content="[^"]*"\s*\/>/, `<meta name="twitter:description" content="${description}" />`)
     .replace(/<style>[\s\S]*?<\/style>/, `<style>${serverFallbackStyles}</style>`)
     .replace(/<body>[\s\S]*?<div id="root">[\s\S]*?<\/div>/, `<body>\n    <div id="root">${rootHtml}</div>`)
-    .replace(/<\/head>/, `    <link rel="canonical" href="${escapeHtml(url)}" />\n    ${alternateLinks}\n    <script id="server-structured-data" type="application/ld+json">${structuredData}</script>\n</head>`);
+    .replace(/<\/head>/, `    ${robotsMeta}\n    <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />\n    ${alternateLinks}\n    ${analyticsScripts}\n    <script id="server-structured-data" type="application/ld+json">${structuredData}</script>\n</head>`);
 };
 
 module.exports = {
+  INDEXABLE_LANGUAGE_CODES,
+  buildCanonicalUrl,
   parseSeoRoute,
   getRequestSeoState,
   getSeoContent,

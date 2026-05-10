@@ -8,7 +8,7 @@ const morgan = require('morgan');
 morgan.token('body', (req) => JSON.stringify(req.body));
 const { API_PLANS, getPlanById } = require('./server/apiPlans');
 const fs = require('fs');
-const { getRequestSeoState, getSeoContent, getHomeSeoContent, injectSeoIntoHtml } = require('./server/seo');
+const { INDEXABLE_LANGUAGE_CODES, getRequestSeoState, getSeoContent, getHomeSeoContent, injectSeoIntoHtml } = require('./server/seo');
 
 app.set('trust proxy', true);
 
@@ -184,6 +184,11 @@ app.use((request, response, next) => {
     return response.redirect(301, `${getPublicBaseUrl(request)}${request.originalUrl}`);
 });
 
+app.get('/sitemap.xml', (request, response) => {
+    response.type('application/xml');
+    response.send(buildSitemapXml(getPublicBaseUrl(request)));
+});
+
 const languageByCountry = {
     CN: 'zh-CN',
     TW: 'zh-CN',
@@ -215,6 +220,43 @@ const getLanguageHomePath = (language) => ({
     'zh-CN': '/zh/',
     'pt-BR': '/pt-br/',
 })[language] || `/${String(language || 'en').toLowerCase()}/`;
+const getLanguagePathSegment = (language) => ({
+    'zh-CN': 'zh',
+    'pt-BR': 'pt-br',
+})[language] || String(language || 'en').toLowerCase();
+const SITEMAP_SLUGS = [
+    'url-shortener',
+    'qr-code-generator',
+    'branded-short-links',
+    'url-shortener-api',
+    'whatsapp-link-shortener',
+    'link-analytics',
+    'bio-link-shortener',
+    'sms-link-shortener',
+    'utm-link-shortener',
+    'campaign-url-builder',
+];
+const buildSitemapXml = (baseUrl) => {
+    const normalizedBaseUrl = String(baseUrl || CANONICAL_PUBLIC_BASE_URL).replace(/\/+$/, '');
+    const lastmod = new Date().toISOString();
+    const urls = [
+        { path: '/', priority: '1.0', changefreq: 'weekly' },
+        ...INDEXABLE_LANGUAGE_CODES.map((language) => ({
+            path: `/${getLanguagePathSegment(language)}/`,
+            priority: language === 'en' ? '0.9' : '0.8',
+            changefreq: 'weekly',
+        })),
+        ...INDEXABLE_LANGUAGE_CODES.flatMap((language) =>
+            SITEMAP_SLUGS.map((slug) => ({
+                path: `/${getLanguagePathSegment(language)}/${slug}`,
+                priority: language === 'en' ? '0.8' : '0.7',
+                changefreq: 'weekly',
+            }))
+        ),
+    ];
+
+    return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(({ path, priority, changefreq }) => `  <url>\n    <loc>${normalizedBaseUrl}${path}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`).join('\n')}\n</urlset>`;
+};
 
 app.get('/api/language-recommendation', (request, response) => {
     if (isCrawlerRequest(request)) {
@@ -303,9 +345,9 @@ app.get('/:code', async (request, response, next) => {
 
 app.get('*', (request, response) => {
     const indexPath = path.join(__dirname, 'build', 'index.html');
-    if (request.path === '/' && !request.query.lang) {
+    if (request.path === '/' && !request.query.lang && !isCrawlerRequest(request)) {
         const savedLanguage = getSavedLanguageFromCookie(request);
-        const targetLanguage = !isCrawlerRequest(request) && savedLanguage ? savedLanguage : 'en';
+        const targetLanguage = savedLanguage || 'en';
         return response.redirect(302, getLanguageHomePath(targetLanguage));
     }
 
@@ -329,7 +371,7 @@ app.get('*', (request, response) => {
     response.send(
         injectSeoIntoHtml(
             fs.readFileSync(indexPath, 'utf8'),
-            { baseUrl: publicBaseUrl, url, language, content, isSeoPage, slug }
+            { baseUrl: publicBaseUrl, url, language, content, isSeoPage, slug, requestPath: request.path }
         )
     );
 });
