@@ -347,8 +347,11 @@ app.get('*', (request, response) => {
     const indexPath = path.join(__dirname, 'build', 'index.html');
     if (request.path === '/' && !request.query.lang && !isCrawlerRequest(request)) {
         const savedLanguage = getSavedLanguageFromCookie(request);
-        const targetLanguage = savedLanguage || 'en';
-        return response.redirect(302, getLanguageHomePath(targetLanguage));
+        if (savedLanguage && savedLanguage !== 'en') {
+            return response.redirect(302, getLanguageHomePath(savedLanguage));
+        }
+
+        return response.sendFile(indexPath);
     }
 
     if (request.path === '/' && request.query.lang) {
