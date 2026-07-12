@@ -147,9 +147,9 @@ describe("server seo helpers", () => {
     });
     expect(getHomeSeoContent("es").seoTitle).toBe("Acortador de URL, QR y enlaces de marca API | ShortURL Wiki");
     expect(getHomeSeoContent("en").eyebrow).toBe("Short-link workspace");
-    expect(getHomeSeoContent("en").title).toBe("Short links, QR codes, branded links, and a simple monthly API.");
+    expect(getHomeSeoContent("en").title).toBe("Shorten a link, create QR codes, and manage branded short URLs.");
     expect(getHomeSeoContent("en").heroNote).toBe("Built for campaign links, social sharing, print QR flows, and recurring team operations.");
-    expect(getHomeSeoContent("en").description).toBe("ShortURL Wiki gives teams one clean place to create short links, download QR codes, publish branded links, and move into recurring monthly API usage.");
+    expect(getHomeSeoContent("en").description).toBe("ShortURL Wiki is a free URL shortener for pasting a long URL, creating a short link, downloading a QR code, publishing branded links, and moving into recurring monthly API usage.");
     expect(getHomeSeoContent("en").overviewDescription).toBe("Create campaign links, WhatsApp links, social media links, QR code destinations, and product links from one clean short-link hub.");
     expect(getHomeSeoContent("en").benefitsTitle).toBe("What teams usually want");
     expect(getHomeSeoContent("en").featuredPages[0]).toBe("URL shortener for campaign and social links");
@@ -330,9 +330,9 @@ describe("server seo helpers", () => {
   test("serves updated english content for homepage api whatsapp analytics and sms pages", () => {
     expect(getHomeSeoContent("en").scenarios[1]).toBe("Move to the API when you need recurring team usage, predictable monthly quotas, and a cleaner rollout path.");
     expect(getHomeSeoContent("en").faqs[0][1].text).toBe("It covers the main short-link jobs together: short URLs, QR codes, branded links, analytics, and a simple API path.");
-    expect(getSeoContent("en", "url-shortener").title).toBe("Shorten URLs for campaigns, social posts, and recurring team use.");
+    expect(getSeoContent("en", "url-shortener").title).toBe("Shorten a link for campaigns, social posts, and recurring team use.");
     expect(getSeoContent("en", "url-shortener").overviewDescription).toBe("People searching for a URL shortener usually want one of three things: a fast tool, cleaner sharing links, or a simple team setup they can trust.");
-    expect(getSeoContent("en", "url-shortener").seoDescription).toBe("Shorten URLs for campaigns, social posts, WhatsApp sharing, and team use with clean links, fast redirects, and a simple setup.");
+    expect(getSeoContent("en", "url-shortener").seoDescription).toBe("Shorten a link for campaigns, social posts, WhatsApp sharing, and team use with clean short URLs, fast redirects, and a simple setup.");
     expect(getSeoContent("en", "url-shortener-api").overviewDescription).toBe("API-driven search intent is different from one-off shortener intent. Product, campaign, and support teams want predictable usage, clean responses, and an easy path to rollout.");
     expect(getSeoContent("en", "whatsapp-link-shortener").overviewDescription).toBe("Most WhatsApp short-link searches come from real distribution needs: bio links, ad entry points, QR materials, support entry, and sales conversations.");
     expect(getSeoContent("en", "link-analytics").title).toBe("Track link usage with a simpler monthly quota model.");
@@ -394,8 +394,8 @@ describe("server seo helpers", () => {
     expect(getSeoContent("ja", "link-analytics").seoTitle).toBe("短縮リンク分析と利用量確認 | ShortURL Wiki");
     expect(getSeoContent("ja", "link-analytics").overviewTitle).toBe("短縮リンク分析ページでチームが知りたいこと");
 
-    expect(getSeoContent("ja", "sms-link-shortener").seoTitle).toBe("SMS向け短縮リンク | ShortURL Wiki");
-    expect(getSeoContent("ja", "sms-link-shortener").overviewTitle).toBe("SMSリンクを短く読みやすく保つ理由");
+    expect(getSeoContent("ja", "sms-link-shortener").seoTitle).toBe("SMS 短縮URLツール | SMSリンク短縮とクリック計測");
+    expect(getSeoContent("ja", "sms-link-shortener").overviewTitle).toBe("SMS 短縮URLで文面を短く読みやすく保つ理由");
     expect(getSeoContent("ja", "sms-link-shortener").faqs[1][1]).toBe("集客チーム、CRMチーム、サポートチーム、そしてスマホ通知を送るプロダクトです。");
 
     expect(getSeoContent("ja", "utm-link-shortener").seoTitle).toBe("UTM付きURL短縮ツール | ShortURL Wiki");
@@ -430,7 +430,7 @@ describe("server seo helpers", () => {
       slug: null,
     });
 
-    expect(output).toContain("URL Shortener API, QR Codes, Branded Links | ShortURL Wiki");
+    expect(output).toContain("Free URL Shortener | Shorten a Link &amp; Create QR Codes");
     expect(output).toContain("seo-hero-tags");
     expect(output).toContain("Short-link workspace");
     expect(output).toContain("Short links");

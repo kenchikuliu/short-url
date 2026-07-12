@@ -29,7 +29,8 @@
     "eject": "react-scripts eject",
     "server": "node server.js",
     "dev": "nodemon server.js",
-    "ga4:gsc:pipeline": "node scripts/ga4-gsc-pipeline.mjs"
+    "ga4:gsc:pipeline": "node scripts/ga4-gsc-pipeline.mjs",
+    "ga4:key-events": "node scripts/ga4-key-events.mjs"
   },
   "eslintConfig": {
     "extends": [

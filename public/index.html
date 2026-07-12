@@ -6,15 +6,15 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#f59e0b" />
-    <meta name="description" content="ShortURL Wiki helps teams shorten URLs, create QR codes, manage branded links, and use a simple API for campaigns, WhatsApp sharing, and social distribution." />
-    <meta property="og:title" content="URL Shortener API, QR Codes, Branded Links | ShortURL Wiki" />
-    <meta property="og:description" content="Shorten URLs, create QR codes, manage branded short links, and use a simple API for campaigns, WhatsApp sharing, social posts, and recurring team use." />
+    <meta name="description" content="Shorten a link with a free URL shortener, create QR codes, and manage branded short URLs for campaigns, SMS, WhatsApp, social posts, and team workflows." />
+    <meta property="og:title" content="Free URL Shortener | Shorten a Link & Create QR Codes" />
+    <meta property="og:description" content="Shorten a link with a free URL shortener, create QR codes, and manage branded short URLs for campaigns, SMS, WhatsApp, social posts, and team workflows." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://shorturl.wiki/" />
     <meta property="og:image" content="%PUBLIC_URL%/hero-minimal-tech.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="URL Shortener API, QR Codes, Branded Links | ShortURL Wiki" />
-    <meta name="twitter:description" content="Shorten URLs, create QR codes, manage branded short links, and use a simple API for campaigns, WhatsApp sharing, social posts, and recurring team use." />
+    <meta name="twitter:title" content="Free URL Shortener | Shorten a Link & Create QR Codes" />
+    <meta name="twitter:description" content="Shorten a link with a free URL shortener, create QR codes, and manage branded short URLs for campaigns, SMS, WhatsApp, social posts, and team workflows." />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-M789Q9L98C"></script>
@@ -54,7 +54,7 @@
             webvisor: true
         });
     </script>
-    <title>URL Shortener API, QR Codes, Branded Links | ShortURL Wiki</title>
+    <title>Free URL Shortener | Shorten a Link & Create QR Codes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -91,12 +91,161 @@
             text-decoration: underline;
         }
     </style>
+    <script>
+        (function() {
+            function cleanProps(props) {
+                var payload = {};
+                Object.keys(props || {}).forEach(function(key) {
+                    var value = props[key];
+                    if (value !== undefined && value !== null && value !== '') {
+                        payload[key] = value;
+                    }
+                });
+                return payload;
+            }
+
+            function trackInteractionEvent(eventName, props) {
+                var payload = cleanProps(props);
+                if (typeof window.gtag === 'function') {
+                    window.gtag('event', eventName, payload);
+                }
+                if (typeof window.plausible === 'function') {
+                    window.plausible(eventName, { props: payload });
+                }
+                if (typeof window.op === 'function') {
+                    window.op('track', eventName, payload);
+                }
+                if (window.openpanel && typeof window.openpanel.track === 'function') {
+                    window.openpanel.track(eventName, payload);
+                }
+            }
+
+            function inferInteraction(label, href) {
+                var target = ((label || '') + ' ' + (href || '')).toLowerCase();
+                var patterns = [
+                    { eventName: 'signup_started', intent: 'signup', pattern: /sign\s*up|signup|register|create account|get started|join/ },
+                    { eventName: 'login_started', intent: 'login', pattern: /log\s*in|login|sign\s*in|signin/ },
+                    { eventName: 'trial_clicked', intent: 'trial', pattern: /free trial|try free|start trial|free/ },
+                    { eventName: 'pricing_viewed', intent: 'pricing', pattern: /pricing|price|plans|api|monthly|quota/ },
+                    { eventName: 'checkout_started', intent: 'checkout', pattern: /checkout|buy|purchase|pay|subscribe/ },
+                    { eventName: 'cta_clicked', intent: 'primary_cta', pattern: /shorten|qr|create|manage|api|start|use|open/ }
+                ];
+
+                for (var i = 0; i < patterns.length; i += 1) {
+                    if (patterns[i].pattern.test(target)) return patterns[i];
+                }
+                return null;
+            }
+
+            function trackUrlSuccessEvents() {
+                var params = new URLSearchParams(window.location.search);
+                var successEvents = [];
+
+                if (params.get('payment') === 'success' || params.get('checkout') === 'success' || params.get('state') === 'checkout-success') {
+                    successEvents.push({
+                        eventName: 'payment_succeeded',
+                        props: {
+                            source: 'url_return',
+                            provider: params.get('provider'),
+                            plan: params.get('plan'),
+                            order_no: params.get('order_no'),
+                            session_id: params.get('session_id')
+                        }
+                    });
+                }
+
+                if (params.get('signup') === 'success' || (params.get('auth_state') === 'success' && params.get('auth_mode') === 'register')) {
+                    successEvents.push({
+                        eventName: 'signup_completed',
+                        props: {
+                            source: 'url_return',
+                            method: params.get('method') || 'unknown'
+                        }
+                    });
+                } else if (params.get('login') === 'success' || params.get('auth_state') === 'success') {
+                    successEvents.push({
+                        eventName: 'login_success',
+                        props: {
+                            source: 'url_return',
+                            method: params.get('method') || 'unknown'
+                        }
+                    });
+                }
+
+                if (params.get('lead') === 'success' || params.get('contact') === 'success') {
+                    successEvents.push({
+                        eventName: 'lead_submitted',
+                        props: {
+                            source: 'url_return',
+                            form_name: params.get('form') || 'lead_form'
+                        }
+                    });
+                }
+
+                successEvents.forEach(function(item) {
+                    var storageKey = [
+                        'shorturl',
+                        item.eventName,
+                        window.location.pathname,
+                        item.props.order_no,
+                        item.props.session_id,
+                        item.props.plan,
+                        item.props.form_name
+                    ].filter(Boolean).join(':');
+
+                    if (window.sessionStorage.getItem(storageKey)) return;
+                    window.sessionStorage.setItem(storageKey, '1');
+
+                    trackInteractionEvent(item.eventName, Object.assign({}, item.props, {
+                        page_path: window.location.pathname
+                    }));
+                });
+            }
+
+            trackUrlSuccessEvents();
+
+            document.addEventListener('click', function(event) {
+                var target = event.target;
+                if (!target || !target.closest) return;
+
+                var interactive = target.closest('a,button,[role="button"]');
+                if (!interactive) return;
+
+                var link = interactive.closest('a[href]');
+                var href = link ? link.getAttribute('href') : '';
+                var label = (
+                    interactive.getAttribute('aria-label') ||
+                    interactive.textContent ||
+                    interactive.getAttribute('title') ||
+                    ''
+                ).replace(/\s+/g, ' ').trim().slice(0, 120);
+                var inferred = inferInteraction(label, href);
+                if (!inferred) return;
+
+                trackInteractionEvent(inferred.eventName, {
+                    intent: inferred.intent,
+                    label: label,
+                    href: href,
+                    page_path: window.location.pathname
+                });
+            }, true);
+
+            document.addEventListener('submit', function(event) {
+                var form = event.target;
+                if (!form || form.tagName !== 'FORM') return;
+                trackInteractionEvent('form_submitted', {
+                    form_name: form.getAttribute('aria-label') || form.getAttribute('name') || form.id || 'form',
+                    page_path: window.location.pathname
+                });
+            }, true);
+        })();
+    </script>
 </head>
 
 <body>
     <div id="root">
-        <h1>ShortURL Wiki</h1>
-        <p>ShortURL Wiki is a URL shortener for teams that need clean links, fast redirects, QR codes, branded short links, and a simple monthly API.</p>
+        <h1>URL shortener for short URLs, QR codes, and branded links</h1>
+        <p>ShortURL Wiki helps teams create a short URL, QR code, or branded link for campaigns, social sharing, WhatsApp distribution, and recurring API workflows.</p>
         <h2>Use cases</h2>
         <p>Create campaign links, WhatsApp links, social media links, QR code destinations, and product links from one clean short-link hub.</p>
         <h2>API and plans</h2>

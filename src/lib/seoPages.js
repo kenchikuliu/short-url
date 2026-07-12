@@ -5,12 +5,12 @@ const pageCatalog = {
   "url-shortener": {
     en: {
       eyebrow: "URL shortener",
-      title: "Shorten URLs for campaigns, social posts, and recurring team use.",
+      title: "Shorten a link for campaigns, social posts, and recurring team use.",
       description:
         "Use this URL shortener to create clean links for WhatsApp, social media, email campaigns, and recurring team use without extra setup.",
-      seoTitle: "URL Shortener for Campaigns and Social Links | ShortURL Wiki",
+      seoTitle: "Shorten a Link Free | URL Shortener for Campaigns",
       seoDescription:
-        "Shorten URLs for campaigns, social posts, WhatsApp sharing, and team use with clean links, fast redirects, and a simple setup.",
+        "Shorten a link for campaigns, social posts, WhatsApp sharing, and team use with clean short URLs, fast redirects, and a simple setup.",
     },
     "zh-CN": {
       eyebrow: "短链接生成器",
@@ -244,13 +244,13 @@ const pageCatalog = {
   },
   "url-shortener-api": {
     en: {
-      eyebrow: "URL shortener API",
-      title: "Use a URL shortener API for product teams, campaign tools, and automation tasks.",
+      eyebrow: "Short URL API",
+      title: "Short URL API for product and campaign teams.",
       description:
-        "Generate short links with one request, track monthly usage, and keep campaign or product usage predictable with monthly plans.",
-      seoTitle: "URL Shortener API with Monthly Plans | ShortURL Wiki",
+        "Generate short URLs with one request, track monthly usage, and keep campaign or product usage predictable with monthly plans.",
+      seoTitle: "Short URL API for Monthly Link Plans | ShortURL Wiki",
       seoDescription:
-        "Use a short-link API for product tools, campaign tools, QR code pages, and automation tasks with predictable monthly plans.",
+        "Use a short URL API for product tools, campaign tools, QR code pages, and automation tasks with predictable monthly plans.",
     },
     "zh-CN": {
       eyebrow: "短链 API",
@@ -576,13 +576,13 @@ const pageCatalog = {
         "把短信营销、提醒通知和移动消息里的链接缩短成更适合文本分发的短链。",
     },
     ja: {
-      eyebrow: "SMS短縮リンク",
-      title: "SMS配信、通知、モバイルメッセージ向けの短縮リンク。",
+      eyebrow: "SMS 短縮URL",
+      title: "SMS 短縮URLツールで、SMSリンクを短く見やすくクリック計測しやすく整理。",
       description:
-        "SMSキャンペーン、通知、サポート案内、取引メッセージに入れるリンクを短く整えられます。",
-      seoTitle: "SMS向け短縮リンク | ShortURL Wiki",
+        "SMS 短縮URLを作成して、キャンペーン配信、通知、サポート案内、取引メッセージの長いURLをスマホ画面で読みやすく整理できます。",
+      seoTitle: "SMS 短縮URLツール | SMSリンク短縮とクリック計測",
       seoDescription:
-        "SMS配信や通知メッセージ向けに短く見やすいリンクを作成できます。",
+        "SMS 短縮URLを作成して、キャンペーン配信、通知、サポート案内、取引メッセージの長いURLを短く見やすく整理できます。",
     },
     ko: {
       eyebrow: "SMS 링크 단축",

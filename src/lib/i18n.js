@@ -31,9 +31,9 @@ export const resolveLanguageFromPathSegment = (segment) => {
 const enCopy = {
     brand: "ShortURL Wiki",
     tagline: "Clean links, fast redirects, and a simple API for teams.",
-    seoTitle: "URL Shortener API, QR Codes, Branded Links | ShortURL Wiki",
+    seoTitle: "Free URL Shortener | Shorten a Link & Create QR Codes",
     seoDescription:
-      "Shorten URLs, create QR codes, manage branded short links, and use a simple API for campaigns, WhatsApp sharing, social posts, and recurring team use.",
+      "Shorten a link with a free URL shortener, create QR codes, and manage branded short URLs for campaigns, SMS, WhatsApp, social posts, and team workflows.",
     navTool: "Shorten",
     navApi: "API",
     navPricing: "Pricing",
@@ -45,9 +45,9 @@ const enCopy = {
     languageRecommendationSwitch: "Switch to {language}",
     languageRecommendationKeep: "Keep current",
     heroEyebrow: "URL shortener + developer API",
-    heroTitle: "Launch short links in seconds.",
+    heroTitle: "Shorten a link, create QR codes, and manage branded short URLs.",
     heroDescription:
-      "Create clean short links from the browser, then upgrade to a monthly API plan when you need volume, tracking, and recurring team use.",
+      "Use ShortURL Wiki as a free URL shortener: paste a long URL, create a short link, download a QR code, and upgrade to an API plan when you need recurring team use.",
     heroPrimaryCta: "Create short link",
     heroSecondaryCta: "View API plans",
     heroStatOne: "Free web tool",

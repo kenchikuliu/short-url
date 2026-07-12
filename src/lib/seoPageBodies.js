@@ -1258,7 +1258,7 @@ const customBodies = {
     },
     en: {
       overviewEyebrow: "PRODUCT INTEGRATION",
-      overviewTitle: "What teams usually expect from a URL shortener API page",
+      overviewTitle: "What teams usually expect from a short URL API page",
       overviewDescription:
         "API-driven search intent is different from one-off shortener intent. Product, campaign, and support teams want predictable usage, clean responses, and an easy path to rollout.",
       highlights: [
@@ -1284,7 +1284,7 @@ const customBodies = {
       faqTitle: "FAQ",
       faqs: [
         {
-          question: "Who searches for a URL shortener API instead of a normal shortener?",
+          question: "Who searches for a short URL API instead of a normal shortener?",
           answer: "Usually product teams, campaign teams, support teams, and anyone who needs repeatable link generation at scale.",
         },
         {
@@ -2326,21 +2326,21 @@ const customBodies = {
   "sms-link-shortener": {
     ja: {
       overviewEyebrow: "SMS",
-      overviewTitle: "SMSリンクを短く読みやすく保つ理由",
+      overviewTitle: "SMS 短縮URLで文面を短く読みやすく保つ理由",
       overviewDescription:
-        "テキストメッセージは表示スペースが限られ、URLがそのまま見えます。短いリンクはノイズを減らし、通知や配信文面を信頼しやすくします。",
+        "SMSは表示スペースが限られ、URLがそのまま見えます。SMS 短縮URLを使うと長いリンクのノイズを減らし、通知、販促配信、サポート案内の文面を読みやすくしながらクリック計測の導線も整理できます。",
       highlights: [
         {
-          title: "SMS内での見た目がすっきりする",
-          body: "短縮リンクは販促SMS、リマインダー、サポート案内をより読みやすくします。",
+          title: "SMS リンクの見た目がすっきりする",
+          body: "短縮URLは販促SMS、リマインダー、サポート案内の長いリンクを短く整理します。",
         },
         {
           title: "通知やアラートに収まりやすい",
           body: "取引通知やモバイル案内では、短いリンクの方が文面全体を詰まり過ぎに見せません。",
         },
         {
-          title: "CRMや定期導線で再利用しやすい",
-          body: "同じリンクをキャンペーン、リマインダー、フォローアップ導線で何度も使いやすくなります。",
+          title: "クリック計測や定期導線で再利用しやすい",
+          body: "同じ短縮URLをキャンペーン、リマインダー、フォローアップ導線で使いやすく、リンク管理もしやすくなります。",
         },
       ],
       scenariosTitle: "よくある利用シーン",
@@ -2353,10 +2353,10 @@ const customBodies = {
       faqs: [
         {
           question: "SMSで短縮リンクを使う利点は何ですか？",
-          answer: "文字数を節約でき、文面が整理され、長いURLによる読みにくさを減らせます。",
+          answer: "文字数を節約でき、文面が整理され、長いURLによる読みにくさを減らし、クリック計測用のリンク管理もしやすくなります。",
         },
         {
-          question: "どんなチームがSMS短縮リンクをよく必要としますか？",
+          question: "どんなチームがSMS短縮URLをよく必要としますか？",
           answer: "集客チーム、CRMチーム、サポートチーム、そしてスマホ通知を送るプロダクトです。",
         },
       ],

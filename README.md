@@ -69,6 +69,15 @@ npm run build
 npm run server
 ```
 
+## Analytics
+
+Event tracking and GA4 key-event setup are documented in [ANALYTICS.md](/Users/Yuki/short-url/ANALYTICS.md). After confirming events in DebugView:
+
+```bash
+npm run ga4:key-events -- --dry-run
+GA4_PROPERTY_ID="123456789" GOOGLE_API_ACCESS_TOKEN="ya29..." npm run ga4:key-events
+```
+
 ## API
 
 Read plans:

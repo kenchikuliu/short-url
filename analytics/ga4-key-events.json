@@ -1,0 +1,18 @@
+{
+  "site": "shorturl.wiki",
+  "keyEvents": [
+    "signup_completed",
+    "login_success",
+    "lead_submitted",
+    "payment_succeeded"
+  ],
+  "supportingEvents": [
+    "cta_clicked",
+    "signup_started",
+    "login_started",
+    "trial_clicked",
+    "pricing_viewed",
+    "checkout_started",
+    "form_submitted"
+  ]
+}

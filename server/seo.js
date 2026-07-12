@@ -53,12 +53,12 @@ const siteImage = "https://shorturl.wiki/hero-minimal-tech.png";
 const homepageCatalog = {
   en: {
     eyebrow: "Short-link workspace",
-    title: "Short links, QR codes, branded links, and a simple monthly API.",
-    description: "ShortURL Wiki gives teams one clean place to create short links, download QR codes, publish branded links, and move into recurring monthly API usage.",
+    title: "Shorten a link, create QR codes, and manage branded short URLs.",
+    description: "ShortURL Wiki is a free URL shortener for pasting a long URL, creating a short link, downloading a QR code, publishing branded links, and moving into recurring monthly API usage.",
     heroNote: "Built for campaign links, social sharing, print QR flows, and recurring team operations.",
     heroTags: ["Short links", "QR codes", "Branded links", "Monthly API"],
-    seoTitle: "URL Shortener API, QR Codes, Branded Links | ShortURL Wiki",
-    seoDescription: "Shorten URLs, create QR codes, manage branded short links, and use a simple API for campaigns, WhatsApp sharing, social posts, and recurring team use.",
+    seoTitle: "Free URL Shortener | Shorten a Link & Create QR Codes",
+    seoDescription: "Shorten a link with a free URL shortener, create QR codes, and manage branded short URLs for campaigns, SMS, WhatsApp, social posts, and team workflows.",
     overviewTitle: "Use cases",
     overviewDescription: "Create campaign links, WhatsApp links, social media links, QR code destinations, and product links from one clean short-link hub.",
     benefitsTitle: "What teams usually want",
@@ -487,10 +487,10 @@ const pageCatalog = {
   "url-shortener": {
     en: {
       eyebrow: "URL shortener",
-      title: "Shorten URLs for campaigns, social posts, and recurring team use.",
+      title: "Shorten a link for campaigns, social posts, and recurring team use.",
       description: "Use this URL shortener to create clean links for WhatsApp, social media, email campaigns, and recurring team use without extra setup.",
-      seoTitle: "URL Shortener for Campaigns and Social Links | ShortURL Wiki",
-      seoDescription: "Shorten URLs for campaigns, social posts, WhatsApp sharing, and team use with clean links, fast redirects, and a simple setup.",
+      seoTitle: "Shorten a Link Free | URL Shortener for Campaigns",
+      seoDescription: "Shorten a link for campaigns, social posts, WhatsApp sharing, and team use with clean short URLs, fast redirects, and a simple setup.",
       overviewTitle: "What users usually need from a URL shortener",
       overviewDescription: "People searching for a URL shortener usually want one of three things: a fast tool, cleaner sharing links, or a simple team setup they can trust.",
       scenariosTitle: "Common use cases",
@@ -1064,12 +1064,12 @@ const pageCatalog = {
   },
   "url-shortener-api": {
     en: {
-      eyebrow: "URL shortener API",
-      title: "Use a URL shortener API for product teams, campaign tools, and automation tasks.",
-      description: "Generate short links with one request, track monthly usage, and keep campaign or product usage predictable with monthly plans.",
-      seoTitle: "URL Shortener API with Monthly Plans | ShortURL Wiki",
-      seoDescription: "Use a short-link API for product tools, campaign tools, QR code pages, and automation tasks with predictable monthly plans.",
-      overviewTitle: "What teams usually expect from a URL shortener API page",
+      eyebrow: "Short URL API",
+      title: "Short URL API for product and campaign teams.",
+      description: "Generate short URLs with one request, track monthly usage, and keep campaign or product usage predictable with monthly plans.",
+      seoTitle: "Short URL API for Monthly Link Plans | ShortURL Wiki",
+      seoDescription: "Use a short URL API for product tools, campaign tools, QR code pages, and automation tasks with predictable monthly plans.",
+      overviewTitle: "What teams usually expect from a short URL API page",
       overviewDescription: "API-driven search intent is different from one-off shortener intent. Product, campaign, and support teams want predictable usage, clean responses, and an easy path to rollout.",
       scenariosTitle: "Common use cases",
       scenarios: [
@@ -1078,7 +1078,7 @@ const pageCatalog = {
         "Product notifications, customer journeys, and support automation",
       ],
       faqs: [
-        ["Who searches for a URL shortener API instead of a normal shortener?", "Usually product teams, campaign teams, support teams, and anyone who needs repeatable link generation at scale."],
+        ["Who searches for a short URL API instead of a normal shortener?", "Usually product teams, campaign teams, support teams, and anyone who needs repeatable link generation at scale."],
         ["Why emphasize monthly plans on this page?", "Because API buyers often want predictable costs and predictable quota limits, not vague pay-as-you-go usage."],
       ],
     },
@@ -1832,13 +1832,13 @@ const pageCatalog = {
   },
   "sms-link-shortener": {
     ja: {
-      eyebrow: "SMS短縮リンク",
-      title: "SMS配信、通知、モバイルメッセージ向けの短縮リンク。",
-      description: "SMSキャンペーン、通知、サポート案内、取引メッセージに入れるリンクを短く整えられます。",
-      seoTitle: "SMS向け短縮リンク | ShortURL Wiki",
-      seoDescription: "SMS配信や通知メッセージ向けに短く見やすいリンクを作成できます。",
-      overviewTitle: "SMSリンクを短く読みやすく保つ理由",
-      overviewDescription: "テキストメッセージは表示スペースが限られ、URLがそのまま見えます。短いリンクはノイズを減らし、通知や配信文面を信頼しやすくします。",
+      eyebrow: "SMS 短縮URL",
+      title: "SMS 短縮URLツールで、SMSリンクを短く見やすくクリック計測しやすく整理。",
+      description: "SMS 短縮URLを作成して、キャンペーン配信、通知、サポート案内、取引メッセージの長いURLをスマホ画面で読みやすく整理できます。",
+      seoTitle: "SMS 短縮URLツール | SMSリンク短縮とクリック計測",
+      seoDescription: "SMS 短縮URLを作成して、キャンペーン配信、通知、サポート案内、取引メッセージの長いURLを短く見やすく整理できます。",
+      overviewTitle: "SMS 短縮URLで文面を短く読みやすく保つ理由",
+      overviewDescription: "SMSは表示スペースが限られ、URLがそのまま見えます。SMS 短縮URLを使うと長いリンクのノイズを減らし、通知、販促配信、サポート案内の文面を読みやすくしながらクリック計測の導線も整理できます。",
       scenariosTitle: "よくある利用シーン",
       scenarios: [
         "SMSキャンペーンや販促配信",
@@ -1846,8 +1846,8 @@ const pageCatalog = {
         "認証、OTP後続案内、モバイル通知フロー",
       ],
       faqs: [
-        ["SMSで短縮リンクを使う利点は何ですか？", "文字数を節約でき、文面が整理され、長いURLによる読みにくさを減らせます。"],
-        ["どんなチームがSMS短縮リンクをよく必要としますか？", "集客チーム、CRMチーム、サポートチーム、そしてスマホ通知を送るプロダクトです。"],
+        ["SMSで短縮リンクを使う利点は何ですか？", "文字数を節約でき、文面が整理され、長いURLによる読みにくさを減らし、クリック計測用のリンク管理もしやすくなります。"],
+        ["どんなチームがSMS短縮URLをよく必要としますか？", "集客チーム、CRMチーム、サポートチーム、そしてスマホ通知を送るプロダクトです。"],
       ],
     },
     en: {
@@ -2638,6 +2638,24 @@ const buildCanonicalUrl = (baseUrl, language, slug, isSeoPage, requestPath = "")
   return buildLocalizedUrl(normalizedBaseUrl, resolved, slug, isSeoPage);
 };
 
+const getSitemapEntries = (baseUrl) => {
+  const normalizedBaseUrl = String(baseUrl || "").replace(/\/+$/, "");
+  const localizedHomeEntries = INDEXABLE_LANGUAGE_DETAILS.map(({ code }) => ({
+    loc: buildLocalizedUrl(normalizedBaseUrl, code, null, false),
+    changefreq: "weekly",
+    priority: code === DEFAULT_LANGUAGE ? "0.9" : "0.8",
+  }));
+  const localizedSeoEntries = INDEXABLE_LANGUAGE_DETAILS.flatMap(({ code }) =>
+    SEO_PAGE_SLUGS.map((slug) => ({
+      loc: buildLocalizedUrl(normalizedBaseUrl, code, slug, true),
+      changefreq: "weekly",
+      priority: code === DEFAULT_LANGUAGE ? "0.8" : "0.7",
+    }))
+  );
+
+  return [...localizedHomeEntries, ...localizedSeoEntries];
+};
+
 const buildAlternateLinks = (baseUrl, slug, isSeoPage) => {
   const normalizedBaseUrl = String(baseUrl || "").replace(/\/+$/, "");
   const links = INDEXABLE_LANGUAGE_DETAILS.map(({ code }) => (
@@ -3312,5 +3330,6 @@ module.exports = {
   getRequestSeoState,
   getSeoContent,
   getHomeSeoContent,
+  getSitemapEntries,
   injectSeoIntoHtml,
 };

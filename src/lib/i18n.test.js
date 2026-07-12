@@ -84,8 +84,8 @@ describe("i18n helpers", () => {
   });
 
   test("localizes hi and id SEO metadata copy", () => {
-    expect(getCopy("en").seoDescription).toBe("Shorten URLs, create QR codes, manage branded short links, and use a simple API for campaigns, WhatsApp sharing, social posts, and recurring team use.");
-    expect(getCopy("en").heroDescription).toBe("Create clean short links from the browser, then upgrade to a monthly API plan when you need volume, tracking, and recurring team use.");
+    expect(getCopy("en").seoDescription).toBe("Shorten a link with a free URL shortener, create QR codes, and manage branded short URLs for campaigns, SMS, WhatsApp, social posts, and team workflows.");
+    expect(getCopy("en").heroDescription).toBe("Use ShortURL Wiki as a free URL shortener: paste a long URL, create a short link, download a QR code, and upgrade to an API plan when you need recurring team use.");
     expect(getCopy("en").heroPanelTitle).toBe("Short Link Hub");
     expect(getCopy("en").seoPagesEyebrow).toBe("Explore use cases");
     expect(getCopy("en").seoPagesTitle).toBe("Choose the short-link page that fits your use case.");
