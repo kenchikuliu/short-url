@@ -16,16 +16,40 @@ const Redis = require('redis');
 const redis = Redis.createClient({
     socket: {
         host: process.env.REDIS_HOST || '127.0.0.1',
-        port: process.env.REDIS_PORT || 6379
+        port: process.env.REDIS_PORT || 6379,
+        reconnectStrategy: (retries) => Math.min(retries * 1000, 30000)
     },
     username: process.env.REDIS_USERNAME || null,
     password: process.env.REDIS_PASSWORD || null,
     pingInterval: 5 * 60 * 1000,
 });
-redis.on('error', err => console.error(err, 'Redis error'));
+let redisReady = false;
+let lastRedisErrorLogAt = 0;
+let lastRedisReconnectLogAt = 0;
+redis.on('error', err => {
+    redisReady = false;
+    const now = Date.now();
+    if (now - lastRedisErrorLogAt > 60000) {
+        lastRedisErrorLogAt = now;
+        console.error(err, 'Redis error');
+    }
+});
 redis.on('connect', () => console.log('Redis is connect'));
-redis.on('reconnecting', () => console.log('Redis is reconnecting'));
-redis.on('ready', () => console.log('Redis is ready'));
+redis.on('reconnecting', () => {
+    const now = Date.now();
+    if (now - lastRedisReconnectLogAt > 60000) {
+        lastRedisReconnectLogAt = now;
+        console.log('Redis is reconnecting');
+    }
+});
+redis.on('ready', () => {
+    redisReady = true;
+    console.log('Redis is ready');
+});
+redis.on('end', () => {
+    redisReady = false;
+    console.log('Redis connection ended');
+});
 const redisKey = {
     code: 'short-url:code',
     map: 'short-url:map',
@@ -96,6 +120,16 @@ const shouldRedirectToCanonicalBaseUrl = (request) => {
 };
 const getUsagePeriod = () => new Date().toISOString().slice(0, 7);
 const getUsageKey = (apiKey, period) => `short-url:api-usage:${apiKey}:${period}`;
+const isRedisReady = () => redisReady && redis.isReady;
+const ensureRedisReady = () => {
+    if (isRedisReady()) {
+        return;
+    }
+
+    const error = new Error('Short-link storage is temporarily unavailable');
+    error.statusCode = 503;
+    throw error;
+};
 const parseApiKeys = () => {
     const value = process.env.SHORTURL_API_KEYS || '';
 
@@ -117,7 +151,7 @@ const parseApiKeys = () => {
 
 const seedApiKeys = async () => {
     const envKeys = parseApiKeys();
-    if (!envKeys.length) {
+    if (!envKeys.length || !isRedisReady()) {
         return;
     }
 
@@ -129,6 +163,7 @@ const seedApiKeys = async () => {
 };
 
 const createShortCode = async (originUrl) => {
+    ensureRedisReady();
     const normalizedUrl = normalizeUrlInput(originUrl);
     const encodedUrl = encodeURI(normalizedUrl);
     if (!isValidHttpUrl(encodedUrl)) {
@@ -145,6 +180,10 @@ const createShortCode = async (originUrl) => {
 };
 
 const requireApiKey = async (request, response, next) => {
+    if (!isRedisReady()) {
+        return response.status(503).json({ error: 'Short-link storage is temporarily unavailable' }).end();
+    }
+
     const apiKey = request.get('x-api-key');
     if (!apiKey) {
         return response.status(401).json({ error: 'Missing API key' }).end();
@@ -336,6 +375,10 @@ app.get('/:code', async (request, response, next) => {
         return next();
     }
 
+    if (!isRedisReady()) {
+        return response.status(503).json({ error: 'Short-link storage is temporarily unavailable' }).end();
+    }
+
     const originUrl = await redis.hGet(redisKey.map, code);
     if (!originUrl) {
         return response.status(404).json({ error: 'Unknown URL' }).end();
@@ -380,9 +423,13 @@ app.get('*', (request, response) => {
 });
 
 const PORT = Number(process.env.PORT) || 3001;
-redis.connect().then(() => {
-    seedApiKeys().catch((error) => console.error(error, 'Failed to seed API keys'));
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-    });
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+
+redis.connect().then(async () => {
+    await seedApiKeys().catch((error) => console.error(error, 'Failed to seed API keys'));
+}).catch((error) => {
+    redisReady = false;
+    console.error(error, 'Redis unavailable at startup; web routes will continue without short-link storage');
 });
