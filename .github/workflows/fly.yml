@@ -15,5 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Skip Fly deploy when token is not configured
+        if: env.FLY_API_TOKEN == ''
+        run: echo "FLY_API_TOKEN is not configured; skipping Fly deploy."
       - uses: superfly/flyctl-actions/setup-flyctl@master
+        if: env.FLY_API_TOKEN != ''
       - run: flyctl deploy --remote-only
+        if: env.FLY_API_TOKEN != ''
