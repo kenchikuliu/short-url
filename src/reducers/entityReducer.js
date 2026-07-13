@@ -19,6 +19,12 @@ const slice = createSlice({
 
 export const { setEntity, clearEntity } = slice.actions;
 
+const trackEvent = (eventName, payload) => {
+    if (typeof window !== 'undefined' && typeof window.shorturlTrackEvent === 'function') {
+        window.shorturlTrackEvent(eventName, payload);
+    }
+};
+
 export const generateShortUrl = originUrl => {
     return async dispatch => {
         try {
@@ -32,7 +38,15 @@ export const generateShortUrl = originUrl => {
                 code: res.code
             }));
             copy(shortUrl);
+            trackEvent('short_url_created', {
+                source: 'web_form',
+                has_qr_code: true
+            });
         } catch (error) {
+            trackEvent('short_url_failed', {
+                source: 'web_form',
+                error_type: 'request_failed'
+            });
             dispatch(setError(error.message));
         }
     }

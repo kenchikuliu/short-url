@@ -106,8 +106,11 @@
 
             function trackInteractionEvent(eventName, props) {
                 var payload = cleanProps(props);
+                window.dataLayer = window.dataLayer || [];
                 if (typeof window.gtag === 'function') {
                     window.gtag('event', eventName, payload);
+                } else {
+                    window.dataLayer.push(['event', eventName, payload]);
                 }
                 if (typeof window.plausible === 'function') {
                     window.plausible(eventName, { props: payload });
@@ -117,6 +120,41 @@
                 }
                 if (window.openpanel && typeof window.openpanel.track === 'function') {
                     window.openpanel.track(eventName, payload);
+                }
+            }
+
+            window.shorturlTrackEvent = trackInteractionEvent;
+
+            function trackPageEntryEvents() {
+                var pathname = window.location.pathname || '/';
+                var params = new URLSearchParams(window.location.search);
+                var referrerHost = '';
+                try {
+                    referrerHost = document.referrer ? new URL(document.referrer).hostname : '';
+                } catch (error) {
+                    referrerHost = '';
+                }
+
+                var attributionKey = 'shorturl:traffic_attribution_captured:' + pathname;
+                if (!window.sessionStorage.getItem(attributionKey)) {
+                    window.sessionStorage.setItem(attributionKey, '1');
+                    trackInteractionEvent('traffic_attribution_captured', {
+                        source: params.get('utm_source') || (referrerHost ? 'referral' : 'direct'),
+                        medium: params.get('utm_medium') || (referrerHost ? 'referral' : 'none'),
+                        campaign: params.get('utm_campaign'),
+                        referrer_host: referrerHost,
+                        page_path: pathname
+                    });
+                }
+
+                var normalizedPath = pathname.replace(/\/+$/, '') || '/';
+                var homeKey = 'shorturl:home_viewed:' + normalizedPath;
+                if (normalizedPath === '/' && !window.sessionStorage.getItem(homeKey)) {
+                    window.sessionStorage.setItem(homeKey, '1');
+                    trackInteractionEvent('home_viewed', {
+                        page_path: pathname,
+                        surface: 'route'
+                    });
                 }
             }
 
@@ -202,6 +240,7 @@
                 });
             }
 
+            trackPageEntryEvents();
             trackUrlSuccessEvents();
 
             document.addEventListener('click', function(event) {

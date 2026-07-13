@@ -4,15 +4,20 @@
     "signup_completed",
     "login_success",
     "lead_submitted",
+    "short_url_created",
     "payment_succeeded"
   ],
   "supportingEvents": [
+    "traffic_attribution_captured",
+    "home_viewed",
     "cta_clicked",
     "signup_started",
     "login_started",
     "trial_clicked",
     "pricing_viewed",
     "checkout_started",
-    "form_submitted"
+    "form_submitted",
+    "short_url_submitted",
+    "short_url_failed"
   ]
 }

@@ -10,13 +10,26 @@ const Search = ({ copy }) => {
     const dispatch = useDispatch();
     const [url, setUrl] = useState('');
 
+    const trackEvent = (eventName, payload) => {
+        if (typeof window !== 'undefined' && typeof window.shorturlTrackEvent === 'function') {
+            window.shorturlTrackEvent(eventName, payload);
+        }
+    };
+
     const handleClick = () => {
         dispatch(clearError());
         dispatch(clearEntity());
         const normalizedUrl = normalizeUserUrl(url);
         if (!isValidUserUrl(normalizedUrl)) {
+            trackEvent('short_url_failed', {
+                error_type: 'invalid_url',
+                source: 'web_form'
+            });
             dispatch(setError(copy.invalidUrl));
         } else {
+            trackEvent('short_url_submitted', {
+                source: 'web_form'
+            });
             dispatch(generateShortUrl(normalizedUrl));
             setUrl('');
         }

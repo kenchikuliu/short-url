@@ -6,6 +6,8 @@ shorturl.wiki sends global click/form intent events to GA4, Plausible, and OpenP
 
 | Event Name | When it fires |
 | --- | --- |
+| `traffic_attribution_captured` | First page entry per session/path, with UTM/referrer context |
+| `home_viewed` | Homepage route is viewed |
 | `cta_clicked` | Generic high-intent CTA click |
 | `signup_started` | Signup/register/start CTA click |
 | `login_started` | Login/sign-in CTA click |
@@ -13,6 +15,9 @@ shorturl.wiki sends global click/form intent events to GA4, Plausible, and OpenP
 | `pricing_viewed` | Pricing/API/plan CTA click |
 | `checkout_started` | Buy/pay/subscribe CTA click |
 | `form_submitted` | Form submit starts |
+| `short_url_submitted` | Valid web shortener form is submitted |
+| `short_url_created` | Short URL and QR code are created successfully |
+| `short_url_failed` | URL validation or shortener request fails |
 | `lead_submitted` | URL success return indicates a lead/contact succeeded |
 | `signup_completed` | URL success return indicates registration succeeded |
 | `login_success` | URL success return indicates login succeeded |
